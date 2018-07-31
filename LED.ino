@@ -1,0 +1,26 @@
+int TX=1;
+int RX=0;
+void setup() {
+  Serial.begin(9600);
+
+}
+
+void loop() {
+ char LEDON [12]={0x55,0xAA,0x01,0x00,0x01,0x00,0x00,0x00,0x12,0x00,0x13,0x01};
+ char LEDOFF[12]={0x55,0xAA,0x01,0x00,0x00,0x00,0x00,0x00,0x12,0x00,0x12,0x01};
+ char CheckBuffer[12];
+ int i=0;
+ Serial.write(LEDOFF,sizeof(LEDOFF));
+ delay(1000);
+ if(Serial.available()>0){
+    while(i<12){
+      CheckBuffer[i]=Serial.read();
+      i++;
+      delay(5);
+    }
+ }  
+  
+  
+  
+
+}
