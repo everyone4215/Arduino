@@ -2,9 +2,12 @@ int TX=1;
 int RX=0;
 char OPEN[12]={0x55,0xAA,0x01,0x00,0x00,0x00,0x00,0x00,0x01,0x00,0x01,0x01};
 char LEDON[12]={0x55,0xAA,0x01,0x00,0x01,0x00,0x00,0x00,0x12,0x00,0x13,0x01};
+char enro[12]={0x55,0xAA,0x01,0x00,0x01,0x00,0x00,0x00,0x23,0x00,0x24,0x01};
+char Buffer[12];
 char OPENBuffer[12];
 char LEDBuffer[12];
 int j=0;
+
 void setup() {
  Serial.begin(9600);
  delay(100);
@@ -19,7 +22,7 @@ void setup() {
     } 
   }
   j=0;
- delay(100);
+  delay(1000);
  Serial.write(LEDON,sizeof(LEDON));
  delay(1000);
  if(Serial.available()>0){
@@ -30,49 +33,25 @@ void setup() {
       delay(5);
     } 
    }
- delay(100);
+ j=0;
+// delay(100);
 
-bool useid=true;
-  int id =0;
-  delay(100);
-  while(useid==true){
-    useid=CheckEnrolled(id);
-    if(useid==true)
-    {
-     id++;
-    }
-  }
-  EnrollStart(id);
-  
-  Serial.print("Press finger to Enroll #");
-  Serial.println(id);
- 
-}
 
-bool CheckEnrolled(int id)
-{ 
-  char CheckEnrolled[12]={0x55,0xAA,0x01,0x00,0x00+id,0x00,0x00,0x00,0x21,0x00,0x21+id,0x01};
-  char CheckBuffer[12];
-  int i=0;
-  
-  Serial.write(CheckEnrolled,sizeof(CheckEnrolled)); 
-  delay(1000);
+ EnrollStart(0);
+ delay(1000);
+ Serial.write(enro,sizeof(enro));
+ Serial.print(enro[8],HEX); 
+ delay(1000);
   if(Serial.available()>0){
-    while(i<12){
-      CheckBuffer[i]=Serial.read();
-      Serial.print(CheckBuffer[i],HEX);
-      i++;
+    while(j<12){
+      Buffer[j]=Serial.read();
+      Serial.print(Buffer[j],HEX);
+      j++;
       delay(5);
-    } 
+    }
    }
-  i=0;
-  delay(100);
-  if(CheckBuffer[8]==0x31){
-    return false;
-  }
-  if(CheckBuffer[8]==0x30){
-    return true;
-  }
+ j=0;
+ delay(100);
 }
 
 int EnrollStart(int id)
@@ -94,6 +73,8 @@ int EnrollStart(int id)
   delay(100);
 }
 
+
 void loop() {
-  delay(1000);
+  delay(10000);
+
 }
